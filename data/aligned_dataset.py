@@ -12,7 +12,7 @@ def load_compressed_tensor(filename):
     """
     retval = None
     with open(filename, mode='rb') as file:
-        retval = Image.fromarray(pickle.loads(lz4framed.decompress(file.read())))
+        retval = Image.fromarray(pickle.loads(lz4framed.decompress(file.read()))[0,0,:,:]).resize((1280,720), Image.ANTIALIAS) #resize to 
     return retval
 
 class AlignedDataset(BaseDataset):
@@ -47,7 +47,7 @@ class AlignedDataset(BaseDataset):
     def __getitem__(self, index):        
         ### input A (real images)
         A_path = self.A_paths[index]              
-        A = Image.open(A_path)        
+        A = Image.open(A_path).resize((1280,720), Image.ANTIALIAS)        
         params = get_params(self.opt, A.size)
         if self.opt.label_nc == 0:
             transform_A = get_transform(self.opt, params)

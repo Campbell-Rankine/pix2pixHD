@@ -6,6 +6,7 @@ from torch.autograd import Variable
 from collections import OrderedDict
 from subprocess import call
 import fractions
+from tqdm import tqdm
 def lcm(a,b): return abs(a * b)/fractions.gcd(a,b) if a and b else 0
 
 from options.train_options import TrainOptions
@@ -53,7 +54,7 @@ display_delta = total_steps % opt.display_freq
 print_delta = total_steps % opt.print_freq
 save_delta = total_steps % opt.save_latest_freq
 
-for epoch in range(start_epoch, opt.niter + opt.niter_decay + 1):
+for epoch in tqdm(range(start_epoch, opt.niter + opt.niter_decay + 1)):
     epoch_start_time = time.time()
     if epoch != start_epoch:
         epoch_iter = epoch_iter % dataset_size
