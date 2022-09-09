@@ -107,9 +107,9 @@ for epoch in tqdm(range(start_epoch, opt.niter + opt.niter_decay + 1)):
 
         ### display output images
         print("Generated:")
-        print(generated.data[0])
+        print(generated.data[0].shape)
         print("INPUT:")
-        print(data['image'][0])
+        print(data['image'][0], data['image'][0].shape)
         if save_fake:
             visuals = OrderedDict([('input_label', util.tensor2label(data['label'][0], opt.label_nc)),
                                    ('synthesized_image', util.tensor2label(generated.data[0], opt.label_nc)),
