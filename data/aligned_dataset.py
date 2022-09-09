@@ -2,6 +2,18 @@ import os.path
 from data.base_dataset import BaseDataset, get_params, get_transform, normalize
 from data.image_folder import make_dataset
 from PIL import Image
+import pickle
+import lz4framed
+import numpy as np
+
+def load_compressed_tensor(filename):
+    """
+    Load binary compressed files into a PIL image and return
+    """
+    retval = None
+    with open(filename, mode='rb') as file:
+        retval = Image.fromarray(pickle.loads(lz4framed.decompress(file.read())))
+    return retval
 
 class AlignedDataset(BaseDataset):
     def initialize(self, opt):
@@ -33,7 +45,7 @@ class AlignedDataset(BaseDataset):
         self.dataset_size = len(self.A_paths) 
       
     def __getitem__(self, index):        
-        ### input A (label maps)
+        ### input A (real images)
         A_path = self.A_paths[index]              
         A = Image.open(A_path)        
         params = get_params(self.opt, A.size)
@@ -45,10 +57,10 @@ class AlignedDataset(BaseDataset):
             A_tensor = transform_A(A) * 255.0
 
         B_tensor = inst_tensor = feat_tensor = 0
-        ### input B (real images)
+        ### input B (motion maps)
         if self.opt.isTrain or self.opt.use_encoded_image:
             B_path = self.B_paths[index]   
-            B = Image.open(B_path).convert('RGB')
+            B = load_compressed_tensor(B_path).convert('RGB')
             transform_B = get_transform(self.opt, params)      
             B_tensor = transform_B(B)
 
