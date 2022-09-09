@@ -112,8 +112,8 @@ for epoch in tqdm(range(start_epoch, opt.niter + opt.niter_decay + 1)):
         print(data['image'][0])
         if save_fake:
             visuals = OrderedDict([('input_label', util.tensor2label(data['label'][0], opt.label_nc)),
-                                   ('synthesized_image', util.tensor2label(generated.data[0])),
-                                   ('real_image', util.tensor2label(data['image'][0]))])
+                                   ('synthesized_image', util.tensor2label(generated.data[0], opt.label_nc)),
+                                   ('real_image', util.tensor2label(data['image'][0], opt.label_nc))])
             visualizer.display_current_results(visuals, epoch, total_steps)
 
         ### save latest model
