@@ -106,10 +106,10 @@ for epoch in tqdm(range(start_epoch, opt.niter + opt.niter_decay + 1)):
             #call(["nvidia-smi", "--format=csv", "--query-gpu=memory.used,memory.free"]) 
 
         ### display output images
-        print("Generated:")
-        print(generated.data[0].shape)
-        print("INPUT:")
-        print(data['image'][0], data['image'][0].shape)
+        #print("Generated:")
+        #print(generated.data[0].shape, torch.unique(generated.data[0]))
+        #print("INPUT:")
+        #print(data['image'][0], data['image'][0].shape)
         if save_fake:
             visuals = OrderedDict([('input_label', util.tensor2label(data['label'][0], opt.label_nc)),
                                    ('synthesized_image', util.tensor2label(generated.data[0], opt.label_nc)),
