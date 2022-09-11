@@ -4,6 +4,7 @@ import numpy as np
 from PIL import Image
 import numpy as np
 import os
+import matplotlib.pyplot as plt
 
 # Converts a Tensor into a Numpy array
 # |imtype|: the desired type of the converted numpy array
@@ -33,6 +34,28 @@ def tensor2label(label_tensor, n_label, imtype=np.uint8):
     label_tensor = Colorize(n_label)(label_tensor)
     label_numpy = np.transpose(label_tensor.numpy(), (1, 2, 0))
     return label_numpy.astype(imtype)
+
+#def tensor2vecmap(image_tensor, imtype=np.uint8, normalize=True):
+def direction(x):
+    ret = []
+    for y in x:
+        if 0 in y:
+            ret.append(0)
+        else:
+            direct = np.rad2deg(np.arctan(y[1] / y[0]))
+            ret.append(direct)
+    return ret
+
+def vecstoim(vectors, name):
+    vmap = np.dstack((vectors, vectors))
+    angles = np.array([direction(x) for x in vmap])
+    import seaborn as sns; sns.set()
+    print(np.min(angles), np.max(angles))
+    ax = sns.heatmap(angles, vmin=np.min(angles), vmax=np.max(angles), cmap=sns.diverging_palette(220, 20, as_cmap=True))
+    plt.xticks([])
+    plt.yticks([])
+    plt.savefig(name+'.png')
+
 
 def save_image(image_numpy, image_path):
     image_pil = Image.fromarray(image_numpy)

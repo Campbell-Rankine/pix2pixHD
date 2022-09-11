@@ -12,7 +12,7 @@ def load_compressed_tensor(filename):
     """
     retval = None
     with open(filename, mode='rb') as file:
-        retval = Image.fromarray(pickle.loads(lz4framed.decompress(file.read()))[0,0,:,:]).resize((1280,720), Image.ANTIALIAS) #resize to 
+        retval = pickle.loads(lz4framed.decompress(file.read())) #resize to 
     return retval
 
 class AlignedDataset(BaseDataset):
@@ -60,7 +60,7 @@ class AlignedDataset(BaseDataset):
         ### input B (motion maps)
         if self.opt.isTrain or self.opt.use_encoded_image:
             B_path = self.B_paths[index]   
-            B = load_compressed_tensor(B_path).convert('RGB')
+            B = load_compressed_tensor(B_path)
             transform_B = get_transform(self.opt, params)      
             B_tensor = transform_B(B)
 
