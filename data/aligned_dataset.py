@@ -5,6 +5,7 @@ from PIL import Image
 import pickle
 import lz4framed
 import numpy as np
+import torch as T
 
 def load_compressed_tensor(filename):
     """
@@ -14,7 +15,7 @@ def load_compressed_tensor(filename):
     with open(filename, mode='rb') as file:
         retval = pickle.loads(lz4framed.decompress(file.read())) #resize to 
         print(retval.shape)
-    return retval
+    return T.tensor(retval)
 
 class AlignedDataset(BaseDataset):
     def initialize(self, opt):
