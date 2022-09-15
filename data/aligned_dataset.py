@@ -63,6 +63,7 @@ class AlignedDataset(BaseDataset):
         if self.opt.isTrain or self.opt.use_encoded_image:
             B_path = self.B_paths[index]   
             B = load_compressed_tensor(B_path)
+            print(B.shape)
             #transform_B = get_transform(self.opt, params)      
             B_tensor = F.interpolate(B, size=(1,2,720,1280))
 
