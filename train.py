@@ -111,8 +111,10 @@ for epoch in tqdm(range(start_epoch, opt.niter + opt.niter_decay + 1)):
         #print("INPUT:")
         #print(data['image'][0], data['image'][0].shape)
         if save_fake:
-            visuals = OrderedDict([('input_label', util.tensor2label(data['label'][0], opt.label_nc)),
-                                   ('synthesized_image', util.tensor2label(generated.data[0], opt.label_nc)),
+            #Change save code so that we can use our own visualization code for comparison
+            util.vecstoim(data['label'][0], str(epoch)+"_"+str(i)+"_train")
+            util.vecstoim(generated.data[0], str(epoch)+"_"+str(i)+"_gen")
+            visuals = OrderedDict([
                                    ('real_image', util.tensor2label(data['image'][0], opt.label_nc))])
             visualizer.display_current_results(visuals, epoch, total_steps)
 

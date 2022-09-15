@@ -42,7 +42,8 @@ def direction(x):
         if 0 in y:
             ret.append(0)
         else:
-            direct = np.rad2deg(np.arctan(y[1] / y[0]))
+            normy = y / np.linalg.norm(y)
+            direct = np.rad2deg(np.arctan(normy[1] / normy[0]))
             ret.append(direct)
     return ret
 
@@ -51,7 +52,7 @@ def vecstoim(vectors, name):
     angles = np.array([direction(x) for x in vmap])
     import seaborn as sns; sns.set()
     print(np.min(angles), np.max(angles))
-    ax = sns.heatmap(angles, vmin=np.min(angles), vmax=np.max(angles), cmap=sns.diverging_palette(220, 20, as_cmap=True))
+    ax = sns.heatmap(angles, vmin=-180, vmax=180, cmap=sns.diverging_palette(330, 10, as_cmap=True))
     plt.xticks([])
     plt.yticks([])
     plt.savefig(name+'.png')
