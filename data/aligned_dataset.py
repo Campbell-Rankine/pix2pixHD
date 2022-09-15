@@ -65,7 +65,8 @@ class AlignedDataset(BaseDataset):
             B = load_compressed_tensor(B_path)
             print(B.shape)
             #transform_B = get_transform(self.opt, params)      
-            B_tensor = F.interpolate(B, size=(1,2,720,1280))
+            B_tensor = F.interpolate(B, size=(720,1280))
+            print(B_tensor.shape)
 
         ### if using instance maps        
         if not self.opt.no_instance:
