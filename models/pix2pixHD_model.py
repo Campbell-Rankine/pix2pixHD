@@ -139,11 +139,9 @@ class Pix2PixHDModel(BaseModel):
             if self.opt.label_feat:
                 inst_map = label_map.cuda()
 
-        return input_label, inst_map, real_image, feat_map
+        return input_label, inst_map, real_image[0], feat_map
 
     def discriminate(self, input_label, test_image, use_pool=False):
-        print("input: " + str(input_label.shape))
-        print("test: " + str(test_image.detach().shape))
         input_concat = torch.cat((input_label, test_image.detach()), dim=1)
         if use_pool:            
             fake_query = self.fake_pool.query(input_concat)
@@ -154,7 +152,6 @@ class Pix2PixHDModel(BaseModel):
     def forward(self, label, inst, image, feat, infer=False):
         # Encode Inputs
         input_label, inst_map, real_image, feat_map = self.encode_input(label, inst, image, feat)  
-
         # Fake Generation
         if self.use_features:
             if not self.opt.load_features:
