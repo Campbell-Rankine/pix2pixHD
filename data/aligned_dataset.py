@@ -6,6 +6,7 @@ import pickle
 import lz4framed
 import numpy as np
 import torch as T
+import torch.nn.functional as F
 
 def load_compressed_tensor(filename):
     """
@@ -64,7 +65,7 @@ class AlignedDataset(BaseDataset):
             B_path = self.B_paths[index]   
             B = load_compressed_tensor(B_path)
             #transform_B = get_transform(self.opt, params)      
-            B_tensor = B
+            B_tensor = F.interpolate(B, size=(1,2,720,1280))
 
         ### if using instance maps        
         if not self.opt.no_instance:
