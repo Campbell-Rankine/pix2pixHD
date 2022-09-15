@@ -61,8 +61,8 @@ class AlignedDataset(BaseDataset):
         if self.opt.isTrain or self.opt.use_encoded_image:
             B_path = self.B_paths[index]   
             B = load_compressed_tensor(B_path)
-            transform_B = get_transform(self.opt, params)      
-            B_tensor = transform_B(B)
+            #transform_B = get_transform(self.opt, params)      
+            B_tensor = B
 
         ### if using instance maps        
         if not self.opt.no_instance:
