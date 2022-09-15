@@ -15,7 +15,7 @@ def load_compressed_tensor(filename):
     with open(filename, mode='rb') as file:
         retval = pickle.loads(lz4framed.decompress(file.read())) #resize to 
         print(retval.shape)
-    return T.tensor(retval)
+    return retval
 
 class AlignedDataset(BaseDataset):
     def initialize(self, opt):
