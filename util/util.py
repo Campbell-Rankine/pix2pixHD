@@ -48,7 +48,7 @@ def direction(x):
     return ret
 
 def vecstoim(vectors, name):
-    vmap = np.dstack((vectors, vectors))
+    vmap = np.dstack((vectors.cpu(), vectors.cpu()))
     angles = np.array([direction(x) for x in vmap])
     import seaborn as sns; sns.set()
     print(np.min(angles), np.max(angles))
