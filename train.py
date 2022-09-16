@@ -112,10 +112,10 @@ for epoch in tqdm(range(start_epoch, opt.niter + opt.niter_decay + 1)):
         #print(data['image'][0], data['image'][0].shape)
         if save_fake:
             #Change save code so that we can use our own visualization code for comparison
-            util.vecstoim(data['image'], "./checkpoints/MFE/web/images/" + str(epoch)+"_"+str(i)+"_train")
+            util.vecstoim(data['image'][0], "./checkpoints/MFE/web/images/" + str(epoch)+"_"+str(i)+"_train")
             util.vecstoim(generated.data, "./checkpoints/MFE/web/images/" + str(epoch)+"_"+str(i)+"_gen")
             visuals = OrderedDict([
-                                   ('real_image', util.tensor2im(data['label'][0], opt.label_nc))])
+                                   ('real_image', util.tensor2im(data['label'], opt.label_nc))])
             visualizer.display_current_results(visuals, epoch, total_steps)
 
         ### save latest model
