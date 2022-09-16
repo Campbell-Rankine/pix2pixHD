@@ -51,7 +51,6 @@ def vecstoim(vectors, name):
     vmap = np.dstack((vectors.cpu(), vectors.cpu()))
     angles = np.array([direction(x) for x in vmap])
     import seaborn as sns; sns.set()
-    print(np.min(angles), np.max(angles))
     ax = sns.heatmap(angles, vmin=-180, vmax=180, cmap=sns.diverging_palette(330, 10, as_cmap=True))
     plt.xticks([])
     plt.yticks([])
