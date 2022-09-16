@@ -48,7 +48,7 @@ def direction(x):
     return ret
 
 def vecstoim(vectors, name):
-    vmap = np.dstack((vectors.cpu(), vectors.cpu()))
+    vmap = np.dstack((vectors.cpu()[0,0,:,:], vectors.cpu()[0,1,:,:]))
     angles = np.array([direction(x) for x in vmap])
     import seaborn as sns; sns.set()
     ax = sns.heatmap(angles, vmin=-180, vmax=180, cmap=sns.diverging_palette(330, 10, as_cmap=True))
