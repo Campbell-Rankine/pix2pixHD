@@ -115,7 +115,7 @@ for epoch in tqdm(range(start_epoch, opt.niter + opt.niter_decay + 1)):
             util.vecstoim(data['image'][0], "./checkpoints/MFE/web/images/" + str(epoch)+"_"+str(i)+"_train")
             util.vecstoim(generated.data, "./checkpoints/MFE/web/images/" + str(epoch)+"_"+str(i)+"_gen")
             visuals = OrderedDict([
-                                   ('real_image', util.tensor2im(data['label']))])
+                                   ('real_image', util.tensor2im(data['label'][0]))])
             visualizer.display_current_results(visuals, epoch, total_steps)
 
         ### save latest model

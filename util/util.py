@@ -5,6 +5,7 @@ from PIL import Image
 import numpy as np
 import os
 import matplotlib.pyplot as plt
+import seaborn as sns
 
 # Converts a Tensor into a Numpy array
 # |imtype|: the desired type of the converted numpy array
@@ -48,13 +49,14 @@ def direction(x):
     return ret
 
 def vecstoim(vectors, name):
+    sns.set()
     vmap = np.dstack((vectors.cpu()[0,0,:,:], vectors.cpu()[0,1,:,:]))
     angles = np.array([direction(x) for x in vmap])
-    import seaborn as sns; sns.set()
-    ax = sns.heatmap(angles, vmin=-180, vmax=180, cmap=sns.diverging_palette(220, 20, as_cmap=True))
+    sns.heatmap(angles, vmin=-90, vmax=90, cmap=sns.diverging_palette(220, 20, as_cmap=True))
     plt.xticks([])
     plt.yticks([])
     plt.savefig(name+'.png')
+    plt.clf()
 
 
 def save_image(image_numpy, image_path):
