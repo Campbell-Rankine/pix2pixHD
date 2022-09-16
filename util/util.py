@@ -43,8 +43,7 @@ def direction(x):
         if 0 in y:
             ret.append(0)
         else:
-            normy = y / np.linalg.norm(y)
-            direct = np.rad2deg(np.arctan(normy[1] / normy[0]))
+            direct = np.rad2deg(np.arctan(y[1] / y[0]))
             ret.append(direct)
     return ret
 
