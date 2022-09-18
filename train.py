@@ -63,11 +63,11 @@ vis_transform = transforms.Compose([
                     transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
                     ])
 #Get static array of training ims
-test_im_root = os.path.join(opt.dataroot, opt.phase + '_A') #Can just replace with _B since we know we are using label_nc=0
+test_im_root = os.path.join(opt.dataroot, opt.phase + '_A/') #Can just replace with _B since we know we are using label_nc=0
 test_im_names = sorted(glob.glob(test_im_root + '*.jpg', recursive = True))[0]
 #static array of training results
-test_vec_root = os.path.join(opt.dataroot, opt.phase + '_B') #Can just replace with _B since we know we are using label_nc=0
-test_vec_names = sorted(glob.glob(test_im_root + '*.jpg', recursive = True))[0]
+test_vec_root = os.path.join(opt.dataroot, opt.phase + '_B/') #Can just replace with _B since we know we are using label_nc=0
+test_vec_names = sorted(glob.glob(test_im_root + '*.pth', recursive = True))[0]
 A = Image.open(test_im_names).resize((1280,720), Image.ANTIALIAS)
 A.save(opt.checkpoints_dir+"/MFE/web/images/"+"static_train_im.jpg")
 B = load_compressed_tensor(test_vec_names)
