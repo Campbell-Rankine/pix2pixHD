@@ -7,13 +7,15 @@ from collections import OrderedDict
 from subprocess import call
 import fractions
 from tqdm import tqdm
+import glob
 def lcm(a,b): return abs(a * b)/fractions.gcd(a,b) if a and b else 0
-
+from data.aligned_dataset import load_compressed_tensor
 from options.train_options import TrainOptions
 from data.data_loader import CreateDataLoader
 from models.models import create_model
 import util.util as util
 from util.visualizer import Visualizer
+from data.base_dataset import *
 
 opt = TrainOptions().parse()
 iter_path = os.path.join(opt.checkpoints_dir, opt.name, 'iter.txt')
@@ -53,6 +55,27 @@ total_steps = (start_epoch-1) * dataset_size + epoch_iter
 display_delta = total_steps % opt.display_freq
 print_delta = total_steps % opt.print_freq
 save_delta = total_steps % opt.save_latest_freq
+
+#Framework for visualization on one epoch
+#Visualization transforms
+vis_transform = transforms.Compose([
+                    transforms.ToTensor(),
+                    transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
+                    ])
+#Get static array of training ims
+test_im_root = os.path.join(opt.dataroot, opt.phase + '_A') #Can just replace with _B since we know we are using label_nc=0
+test_im_names = sorted(glob.glob(test_im_root + '*.jpg', recursive = True))[0]
+#static array of training results
+test_vec_root = os.path.join(opt.dataroot, opt.phase + '_B') #Can just replace with _B since we know we are using label_nc=0
+test_vec_names = sorted(glob.glob(test_im_root + '*.jpg', recursive = True))[0]
+A = Image.open(test_im_names).resize((1280,720), Image.ANTIALIAS)
+A.save(opt.checkpoints_dir+"/MFE/web/images/"+"static_train_im.jpg")
+B = load_compressed_tensor(test_vec_names)
+#Transforms
+A = vis_transform(A)
+B = torch.nn.functional.interpolate(B, size=(720,1280))
+util.vecstoim(B, opt.checkpoints_dir+"/MFE/web/images/"+"static_train_vec")
+
 
 for epoch in tqdm(range(start_epoch, opt.niter + opt.niter_decay + 1)):
     epoch_start_time = time.time()
@@ -111,12 +134,12 @@ for epoch in tqdm(range(start_epoch, opt.niter + opt.niter_decay + 1)):
         #print("INPUT:")
         #print(data['image'][0], data['image'][0].shape)
         if save_fake:
-            #Change save code so that we can use our own visualization code for comparison os.path.join(opt.checkpoints_dir, opt.name
-            util.vecstoim(data['image'][0], opt.checkpoints_dir+"/MFE/web/images/" + str(epoch)+"_"+str(i)+"_train")
-            util.vecstoim(generated.data, opt.checkpoints_dir+"/MFE/web/images/" + str(epoch)+"_"+str(i)+"_gen")
-            visuals = OrderedDict([
-                                   ('real_image', util.tensor2im(data['label'][0]))])
-            visualizer.display_current_results(visuals, epoch, total_steps)
+            with torch.no_grad():
+                model.eval()
+                out = model(Variable(A))
+                #Change save code so that we can use our own visualization code for comparison os.path.join(opt.checkpoints_dir, opt.name
+                util.vecstoim(out, opt.checkpoints_dir+"/MFE/web/images/" + str(epoch)+"_"+str(i)+"_gen")
+            model.train()
 
         ### save latest model
         if total_steps % opt.save_latest_freq == save_delta:
