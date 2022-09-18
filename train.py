@@ -67,7 +67,7 @@ test_im_root = os.path.join(opt.dataroot, opt.phase + '_A/') #Can just replace w
 test_im_names = sorted(glob.glob(test_im_root + '*.jpg', recursive = True))[0]
 #static array of training results
 test_vec_root = os.path.join(opt.dataroot, opt.phase + '_B/') #Can just replace with _B since we know we are using label_nc=0
-test_vec_names = sorted(glob.glob(test_im_root + '*.pth', recursive = True))[0]
+test_vec_names = sorted(glob.glob(test_vec_root + '*.pth', recursive = True))[0]
 A = Image.open(test_im_names).resize((1280,720), Image.ANTIALIAS)
 A.save(opt.checkpoints_dir+"/MFE/web/images/"+"static_train_im.jpg")
 B = load_compressed_tensor(test_vec_names)
@@ -135,8 +135,8 @@ for epoch in tqdm(range(start_epoch, opt.niter + opt.niter_decay + 1)):
         #print(data['image'][0], data['image'][0].shape)
         if save_fake:
             with torch.no_grad():
-                model.eval()
-                out = model(Variable(A))
+                losses, out = model(Variable(B), Variable(torch.tensor([0])), 
+                Variable(A), Variable(torch.tensor([0])), infer=save_fake)
                 #Change save code so that we can use our own visualization code for comparison os.path.join(opt.checkpoints_dir, opt.name
                 util.vecstoim(out, opt.checkpoints_dir+"/MFE/web/images/" + str(epoch)+"_"+str(i)+"_gen")
             model.train()
