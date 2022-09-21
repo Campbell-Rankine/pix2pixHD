@@ -139,7 +139,6 @@ for epoch in tqdm(range(start_epoch, opt.niter + opt.niter_decay + 1)):
             with torch.no_grad():
                 losses, out = model(Variable(A), Variable(torch.tensor([0])), 
                 Variable(B), Variable(torch.tensor([0])), infer=save_fake)
-                A = torch.unsqueeze(A, dim=0)
                 #Change save code so that we can use our own visualization code for comparison os.path.join(opt.checkpoints_dir, opt.name
                 util.vecstoim(out, opt.checkpoints_dir+"/MFE/web/images/" + str(epoch)+"_"+str(i)+"_gen")
 
