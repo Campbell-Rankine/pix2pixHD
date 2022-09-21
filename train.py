@@ -74,6 +74,8 @@ B = load_compressed_tensor(test_vec_names)
 #Transforms
 A = vis_transform(A)
 B = torch.nn.functional.interpolate(B, size=(720,1280))
+A = torch.unsqueeze(A, dim=0)
+B = torch.unsqueeze(B, dim=0)
 util.vecstoim(B, opt.checkpoints_dir+"/MFE/web/images/"+"static_train_vec")
 
 
@@ -135,11 +137,11 @@ for epoch in tqdm(range(start_epoch, opt.niter + opt.niter_decay + 1)):
         #print(data['image'][0], data['image'][0].shape)
         if save_fake:
             with torch.no_grad():
-                losses, out = model(Variable(B), Variable(torch.tensor([0])), 
-                Variable(A), Variable(torch.tensor([0])), infer=save_fake)
+                losses, out = model(Variable(A), Variable(torch.tensor([0])), 
+                Variable(B), Variable(torch.tensor([0])), infer=save_fake)
+                A = torch.unsqueeze(A, dim=0)
                 #Change save code so that we can use our own visualization code for comparison os.path.join(opt.checkpoints_dir, opt.name
                 util.vecstoim(out, opt.checkpoints_dir+"/MFE/web/images/" + str(epoch)+"_"+str(i)+"_gen")
-            model.train()
 
         ### save latest model
         if total_steps % opt.save_latest_freq == save_delta:
