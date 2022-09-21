@@ -74,9 +74,9 @@ B = load_compressed_tensor(test_vec_names)
 #Transforms
 A = vis_transform(A)
 B = torch.nn.functional.interpolate(B, size=(720,1280))
+util.vecstoim(B, opt.checkpoints_dir+"/MFE/web/images/"+"static_train_vec")
 A = torch.unsqueeze(A, dim=0)
 B = torch.unsqueeze(B, dim=0)
-util.vecstoim(B, opt.checkpoints_dir+"/MFE/web/images/"+"static_train_vec")
 
 
 for epoch in tqdm(range(start_epoch, opt.niter + opt.niter_decay + 1)):
